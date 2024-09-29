@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Camera Capture and Email</title>
+  <title>Photo Capture and Send</title>
   <style>
     #videoElement {
       width: 100%;
@@ -13,10 +13,10 @@
 </head>
 <body>
 
-  <h1>Take a Photo</h1>
+  <h1>Take and Send Photo</h1>
 
   <video id="videoElement" autoplay></video>
-  <button id="takePhoto">Take Photo</button>
+  <button id="takePhoto">Take Photo & Send</button>
   <canvas id="canvas" style="display: none;"></canvas>
 
   <script>
@@ -30,10 +30,10 @@
         video.srcObject = stream;
       })
       .catch(function(err) {
-        console.log("Something went wrong: " + err);
+        console.log("Camera access denied: " + err);
       });
 
-    // Fotoğraf çek
+    // Fotoğraf çek ve Formspree ile gönder
     takePhotoBtn.addEventListener('click', function() {
       const context = canvas.getContext('2d');
       canvas.width = video.videoWidth;
@@ -43,11 +43,24 @@
       // Fotoğrafı veri URL'si olarak al
       const imageData = canvas.toDataURL('image/png');
 
-      // Email'e fotoğrafı gönder (Formspree veya benzeri bir API kullanılabilir)
-      const email = "example@example.com";  // Kendi email adresini gir
-      const subject = "Photo from Camera";
-      const body = "Here is the photo: " + encodeURIComponent(imageData);
-      window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_blank');
+      // Formspree API'sine gönderme
+      fetch("https://formspree.io/YOUR_FORMSPREE_CODE", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          _subject: "Photo from Camera",
+          photo: imageData
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert('Photo sent successfully!');
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
     });
   </script>
 

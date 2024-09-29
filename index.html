@@ -50,6 +50,7 @@
       let imageData = canvas.toDataURL('image/png');
       imageData = imageData.replace(/^data:image\/(png|jpg);base64,/, '');
 
+      // Cloudinary'ye fotoğrafı yükle
       const cloudinaryUrl = 'https://api.cloudinary.com/v1_1/dhyso9tgz/image/upload';
       const formData = new FormData();
       formData.append('file', imageData);
@@ -66,6 +67,7 @@
           const imageUrl = data.secure_url;
           console.log("Image URL:", imageUrl);
 
+          // Formspree ile e-posta gönder
           fetch("https://formspree.io/f/mdknqlee", {
             method: "POST",
             headers: {

@@ -3,18 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Phone Call Button</title>
+  <title>Interactive Button</title>
+  <style>
+    #message {
+      display: none;
+      font-size: 24px;
+      margin-top: 20px;
+    }
+
+    #image {
+      display: none;
+      margin-top: 20px;
+    }
+
+    #smsButton {
+      display: none;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
 
-  <h1>Arama Yap</h1>
+  <h1>Cezbeden Buton</h1>
 
-  <button id="callButton">05372435123 Numarasını Ara</button>
+  <!-- Buton -->
+  <button id="callButton">BAS</button>
+
+  <!-- Mesaj -->
+  <div id="message">Bas</div>
+
+  <!-- Nah Çeken Resim -->
+  <img id="image" src="https://i.ytimg.com/vi/hZpdMOMip2E/maxresdefault.jpg" alt="Nah Çeken Foto" width="300" height="200">
+
+  <!-- SMS Gönderme Butonu -->
+  <button id="smsButton">SMS Gönder</button>
 
   <script>
-    // Butona tıklayınca arama başlatma
+    // Butona tıklayınca mesajı ve resmi gösterme
     document.getElementById('callButton').addEventListener('click', function() {
-      window.location.href = 'tel:05372435123';
+      // "Bas" mesajını göster
+      document.getElementById('message').style.display = 'block';
+
+      // 3 saniye bekle ve sonra resmi göster
+      setTimeout(function() {
+        document.getElementById('image').style.display = 'block';
+      }, 3000);
+
+      // SMS butonunu 3 saniye sonra göster
+      setTimeout(function() {
+        document.getElementById('smsButton').style.display = 'block';
+      }, 3000);
+    });
+
+    // SMS gönderme butonuna tıklayınca SMS uygulamasını açma
+    document.getElementById('smsButton').addEventListener('click', function() {
+      window.location.href = 'sms:05372435123?body=Nasılsın?';
     });
   </script>
 

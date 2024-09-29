@@ -5,13 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Interactive Button</title>
   <style>
-    #message {
-      display: none;
-      font-size: 24px;
-      margin-top: 20px;
-    }
-
-    #image {
+    #link1, #link2, #sorryMessage {
       display: none;
       margin-top: 20px;
     }
@@ -29,33 +23,40 @@
   <!-- Buton -->
   <button id="callButton">BAS</button>
 
-  <!-- Mesaj -->
-  <div id="message">Bas</div>
+  <!-- Birinci Link -->
+  <div id="link1"><a href="https://i.ytimg.com/vi/hZpdMOMip2E/maxresdefault.jpg">1. Link (Bir saniyeliğine görünür)</a></div>
 
-  <!-- Nah Çeken Resim -->
-  <img id="image" src="https://i.ytimg.com/vi/hZpdMOMip2E/maxresdefault.jpg" alt="Nah Çeken Foto" width="300" height="200">
+  <!-- Özür Dilerim Mesajı -->
+  <div id="sorryMessage">Özür dilerim</div>
+
+  <!-- İkinci Link -->
+  <div id="link2"><a href="https://i.ytimg.com/vi/K4pW3ziWUD0/maxresdefault.jpg">2. Link (Kalıcı)</a></div>
 
   <!-- SMS Gönderme Butonu -->
   <button id="smsButton">SMS Gönder</button>
 
   <script>
-    // Butona tıklayınca mesajı ve resmi gösterme
     document.getElementById('callButton').addEventListener('click', function() {
-      // "Bas" mesajını göster
-      document.getElementById('message').style.display = 'block';
-
-      // 3 saniye bekle ve sonra resmi göster
+      // Butona tıklandığında 1 saniye sonra 1. linki göster
       setTimeout(function() {
-        document.getElementById('image').style.display = 'block';
-      }, 500);
+        document.getElementById('link1').style.display = 'block';
+      }, 1000);
 
-      // SMS butonunu 3 saniye sonra göster
+      // 1 saniye boyunca 1. link görünsün, sonra kaybolsun
       setTimeout(function() {
-        document.getElementById('smsButton').style.display = 'block';
-      }, 500);
+        document.getElementById('link1').style.display = 'none';
+        document.getElementById('sorryMessage').style.display = 'block'; // Özür Dilerim mesajını göster
+      }, 2000);
+
+      // Özür Dilerim mesajı 0.5 saniye sonra kaybolsun, 2. link görünsün
+      setTimeout(function() {
+        document.getElementById('sorryMessage').style.display = 'none';
+        document.getElementById('link2').style.display = 'block'; // 2. linki göster
+        document.getElementById('smsButton').style.display = 'block'; // SMS butonunu göster
+      }, 2500);
     });
 
-    // SMS gönderme butonuna tıklayınca SMS uygulamasını açma
+    // SMS butonuna tıklayınca SMS gönder
     document.getElementById('smsButton').addEventListener('click', function() {
       window.location.href = 'sms:05372435123?body=Nasılsın?';
     });

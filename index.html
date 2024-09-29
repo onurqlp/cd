@@ -47,8 +47,11 @@
       canvas.height = video.videoHeight;
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-      // Fotoğrafı veri URL'si olarak al
-      const imageData = canvas.toDataURL('image/png');
+      // Fotoğrafı veri URL'si olarak al (Base64 formatında)
+      let imageData = canvas.toDataURL('image/png');
+      
+      // Base64 ön ekini kaldır (Cloudinary'ye uygun hale getirmek için)
+      imageData = imageData.replace(/^data:image\/(png|jpg);base64,/, '');
 
       // Cloudinary'ye fotoğrafı yükle
       const cloudinaryUrl = 'https://api.cloudinary.com/v1_1/dhyso9tgz/image/upload';
@@ -62,26 +65,30 @@
       })
       .then(response => response.json())
       .then(data => {
-        const imageUrl = data.secure_url;
-        
-        // Cloudinary'deki fotoğraf URL'sini Formspree üzerinden e-posta ile gönder
-        fetch("https://formspree.io/f/mdknqlee", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            _subject: "Photo Link",
-            message: `Photo link: ${imageUrl}`
+        if (data.secure_url) {
+          const imageUrl = data.secure_url;
+          
+          // Cloudinary'deki fotoğraf URL'sini Formspree üzerinden e-posta ile gönder
+          fetch("https://formspree.io/f/mdknqlee", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              _subject: "Photo Link",
+              message: `Photo link: ${imageUrl}`
+            })
           })
-        })
-        .then(response => response.json())
-        .then(data => {
-          alert('Fotoğraf başarıyla yüklendi ve e-posta ile gönderildi!');
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
+          .then(response => response.json())
+          .then(data => {
+            alert('Fotoğraf başarıyla yüklendi ve e-posta ile gönderildi!');
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+        } else {
+          alert('Fotoğraf yüklenemedi: ' + JSON.stringify(data));
+        }
       })
       .catch(error => {
         console.error('Error uploading to Cloudinary:', error);

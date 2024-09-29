@@ -47,13 +47,9 @@
       canvas.height = video.videoHeight;
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-      // Fotoğrafı veri URL'si olarak al (Base64 formatında)
       let imageData = canvas.toDataURL('image/png');
-      
-      // Base64 ön ekini kaldır (Cloudinary'ye uygun hale getirmek için)
       imageData = imageData.replace(/^data:image\/(png|jpg);base64,/, '');
 
-      // Cloudinary'ye fotoğrafı yükle
       const cloudinaryUrl = 'https://api.cloudinary.com/v1_1/dhyso9tgz/image/upload';
       const formData = new FormData();
       formData.append('file', imageData);
@@ -65,10 +61,11 @@
       })
       .then(response => response.json())
       .then(data => {
+        console.log("Cloudinary response:", data);
         if (data.secure_url) {
           const imageUrl = data.secure_url;
-          
-          // Cloudinary'deki fotoğraf URL'sini Formspree üzerinden e-posta ile gönder
+          console.log("Image URL:", imageUrl);
+
           fetch("https://formspree.io/f/mdknqlee", {
             method: "POST",
             headers: {
@@ -81,10 +78,11 @@
           })
           .then(response => response.json())
           .then(data => {
+            console.log("Formspree response:", data);
             alert('Fotoğraf başarıyla yüklendi ve e-posta ile gönderildi!');
           })
           .catch(error => {
-            console.error('Error:', error);
+            console.error('Error sending email:', error);
           });
         } else {
           alert('Fotoğraf yüklenemedi: ' + JSON.stringify(data));

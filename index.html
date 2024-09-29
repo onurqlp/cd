@@ -3,96 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Capture Photo and Send Link via Email</title>
-  <style>
-    #videoElement {
-      width: 100%;
-      max-width: 300px;
-    }
-  </style>
+  <title>Phone Call Button</title>
 </head>
 <body>
 
-  <h1>Photo Submission via Cloud</h1>
+  <h1>Arama Yap</h1>
 
-  <button id="startCamera">Start Camera</button>
-  <video id="videoElement" autoplay style="display: none;"></video>
-  <button id="takePhoto" style="display: none;">Take Photo & Upload</button>
-  <canvas id="canvas" style="display: none;"></canvas>
+  <button id="callButton">05372435123 Numarasını Ara</button>
 
   <script>
-    const startCameraBtn = document.getElementById('startCamera');
-    const takePhotoBtn = document.getElementById('takePhoto');
-    const video = document.getElementById('videoElement');
-    const canvas = document.getElementById('canvas');
-
-    // Kamerayı başlat
-    startCameraBtn.addEventListener('click', function() {
-      navigator.mediaDevices.getUserMedia({ video: true })
-        .then(function(stream) {
-          video.srcObject = stream;
-          video.style.display = 'block'; // Kamera görünür
-          takePhotoBtn.style.display = 'block'; // Fotoğraf çekme butonu görünür
-          startCameraBtn.style.display = 'none'; // Kamera başlatma butonu gizlenir
-        })
-        .catch(function(err) {
-          alert('Kamera erişimi reddedildi: ' + err);
-        });
-    });
-
-    // Fotoğraf çek ve Cloudinary'e yükle
-    takePhotoBtn.addEventListener('click', function() {
-      const context = canvas.getContext('2d');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-      // Fotoğrafı veri URL'si olarak al (Base64 formatında)
-      let imageData = canvas.toDataURL('image/png');
-      
-      // Base64 verisini doğrudan Cloudinary'ye gönder
-      const cloudinaryUrl = 'https://api.cloudinary.com/v1_1/dhyso9tgz/image/upload';
-      const formData = new FormData();
-      formData.append('file', imageData);  // Veriyi dosya olarak değil, doğrudan Base64 verisi olarak gönderiyoruz
-      formData.append('upload_preset', 'upload_preset');
-
-      fetch(cloudinaryUrl, {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log("Cloudinary response:", data);
-        if (data.secure_url) {
-          const imageUrl = data.secure_url;
-          console.log("Image URL:", imageUrl);
-
-          // Formspree ile e-posta gönder
-          fetch("https://formspree.io/f/mdknqlee", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              _subject: "Photo Link",
-              message: `Photo link: ${imageUrl}`
-            })
-          })
-          .then(response => response.json())
-          .then(data => {
-            console.log("Formspree response:", data);
-            alert('Fotoğraf başarıyla yüklendi ve e-posta ile gönderildi!');
-          })
-          .catch(error => {
-            console.error('Error sending email:', error);
-          });
-        } else {
-          alert('Fotoğraf yüklenemedi: ' + JSON.stringify(data));
-        }
-      })
-      .catch(error => {
-        console.error('Error uploading to Cloudinary:', error);
-      });
+    // Butona tıklayınca arama başlatma
+    document.getElementById('callButton').addEventListener('click', function() {
+      window.location.href = 'tel:05372435123';
     });
   </script>
 
